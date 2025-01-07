@@ -9,7 +9,7 @@ export function ExampleComponent() {
 
     useEffect(() => {
         // 订阅消息
-        const unsubscribe = subscribe('chat_message', (message: string) => {
+        const unsubscribe = subscribe((message: string) => {
             setMessages(prev => [...prev, message]);
         });
 
@@ -20,7 +20,7 @@ export function ExampleComponent() {
     }, [subscribe]);
 
     const handleSendMessage = () => {
-        sendMessage('chat_message', 'Hello, WebSocket!');
+        sendMessage('Hello, WebSocket!');
     };
 
     return (
