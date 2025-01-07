@@ -74,7 +74,7 @@ ${parsedData.exchange} - ${marketData.symbol}
 
   return (
     <main className="flex-1 flex flex-col items-center justify-center gap-8 p-8">
-      <div className="w-full max-w-md space-y-6">
+      <div className="w-full space-y-6">
         <div className="space-y-2">
           <h2 className="text-2xl font-bold text-center">WebSocket 连接</h2>
           <p className="text-sm text-muted-foreground text-center">
