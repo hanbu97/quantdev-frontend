@@ -35,14 +35,42 @@ export default function Home() {
 
   // 监听 WebSocket 消息
   useEffect(() => {
-    const unsubscribe = subscribe((data: any) => {
-      setMessages(prev => [...prev, JSON.stringify(data)]);
-    });
+    console.log('设置消息订阅, 当前状态:', status);
 
-    return () => {
-      unsubscribe();
-    };
-  }, [subscribe]);
+    if (status === 'connected') {
+      const unsubscribe = subscribe((data: string) => {
+        console.log('收到WebSocket消息:', data);
+
+        try {
+          const parsedData = JSON.parse(data);
+          console.log('解析后的数据:', parsedData);
+
+          if (parsedData.type === "update") {
+            const marketData = parsedData.data[0];
+            const formattedMsg = `
+${parsedData.exchange} - ${marketData.symbol}
+价格: ${marketData.last_price}
+买一: ${marketData.bid_price} (${marketData.bid_qty})
+卖一: ${marketData.ask_price} (${marketData.ask_qty})
+24h涨跌: ${marketData.price_change_percentage.toFixed(2)}%
+时间: ${new Date(marketData.ts).toLocaleTimeString()}
+            `.trim();
+
+            console.log('格式化后的消息:', formattedMsg);
+            setMessages(prev => [...prev, formattedMsg]);
+          }
+        } catch (e) {
+          console.error('解析消息失败:', e);
+          setMessages(prev => [...prev, data]);
+        }
+      });
+
+      return () => {
+        console.log('清理消息订阅');
+        unsubscribe();
+      };
+    }
+  }, [status, subscribe]);
 
   return (
     <main className="flex-1 flex flex-col items-center justify-center gap-8 p-8">
@@ -70,19 +98,35 @@ export default function Home() {
           </Button>
         </div>
 
+        <Button
+          onClick={() => {
+            const testMsg = `测试消息 ${Date.now()}`;
+            setMessages(prev => [...prev, testMsg]);
+          }}
+          className="mt-2"
+        >
+          添加测试消息
+        </Button>
+
         <Card className="mt-4">
           <CardContent className="p-4">
             <h3 className="text-sm font-medium mb-2">接收到的消息:</h3>
-            <ScrollArea className="h-[300px] w-full rounded-md border p-4">
+            <ScrollArea className="h-[500px] w-full rounded-md border p-4">
               <div className="space-y-2">
-                {messages.map((msg, index) => (
-                  <div
-                    key={index}
-                    className="text-sm rounded-lg bg-muted p-3"
-                  >
-                    {msg}
+                {messages.length === 0 ? (
+                  <div className="text-center text-muted-foreground">
+                    暂无消息
                   </div>
-                ))}
+                ) : (
+                  messages.map((msg, index) => (
+                    <div
+                      key={index}
+                      className="text-xs rounded-lg bg-muted p-2 whitespace-pre font-mono border"
+                    >
+                      {msg}
+                    </div>
+                  ))
+                )}
               </div>
             </ScrollArea>
           </CardContent>

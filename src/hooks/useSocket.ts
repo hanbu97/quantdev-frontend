@@ -43,7 +43,8 @@ export function useSocket(initialUrl: string) {
   const subscribe = useCallback((callback: (data: any) => void) => {
     if (socketRef.current) {
       socketRef.current.onmessage = (event) => {
-        callback(JSON.parse(event.data));
+        console.log("WebSocket原始消息:", event.data);
+        callback(event.data);
       };
     }
 
