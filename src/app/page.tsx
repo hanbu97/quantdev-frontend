@@ -12,7 +12,11 @@ import { LatencyChart } from "@/components/LatencyChart";
 export default function Home() {
   const [secretKey, setSecretKey] = useState("");
   const [messages, setMessages] = useState<string[]>([]);
-  const [latencyData, setLatencyData] = useState<Array<{ timestamp: number; latency: number }>>([]);
+  const [latencyData, setLatencyData] = useState<Array<{
+    timestamp: number;
+    latency: number;
+    exchange: string;
+  }>>([]);
   const { toast } = useToast();
   const { status, subscribe, connect } = useSocketContext();
 
@@ -47,8 +51,9 @@ export default function Home() {
             if (latencyInfo && typeof latencyInfo.latency === 'number') {
               setLatencyData(prev => [...prev, {
                 timestamp: Date.now(),
-                latency: latencyInfo.latency
-              }].slice(-50)); // 只保留最近50个数据点
+                latency: latencyInfo.latency,
+                exchange: parsedData.exchange
+              }].slice(-100)); // 保留最近100个数据点
             }
 
             // 处理市场数据
