@@ -7,10 +7,12 @@ import { useSocketContext } from "@/contexts/SocketContext";
 import { useToast } from "@/hooks/use-toast";
 import { Card, CardContent } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { LatencyChart } from "@/components/LatencyChart";
 
 export default function Home() {
   const [secretKey, setSecretKey] = useState("");
   const [messages, setMessages] = useState<string[]>([]);
+  const [latencyData, setLatencyData] = useState<Array<{ timestamp: number; latency: number }>>([]);
   const { toast } = useToast();
   const { status, subscribe, connect } = useSocketContext();
 
@@ -40,6 +42,16 @@ export default function Home() {
         try {
           const parsedData = JSON.parse(data);
           if (parsedData.type === "update") {
+            // 处理 latency 数据
+            const latencyInfo = parsedData.data[1];
+            if (latencyInfo && typeof latencyInfo.latency === 'number') {
+              setLatencyData(prev => [...prev, {
+                timestamp: Date.now(),
+                latency: latencyInfo.latency
+              }].slice(-50)); // 只保留最近50个数据点
+            }
+
+            // 处理市场数据
             const marketData = parsedData.data[0];
             const formattedMsg = `
 ${parsedData.exchange} - ${marketData.symbol}
@@ -88,6 +100,13 @@ ${parsedData.exchange} - ${marketData.symbol}
             确认
           </Button>
         </div>
+
+        <Card>
+          <CardContent className="p-4">
+            <h3 className="text-sm font-medium mb-2">延迟监控</h3>
+            <LatencyChart data={latencyData} />
+          </CardContent>
+        </Card>
 
         <Card className="mt-4">
           <CardContent className="p-4">
