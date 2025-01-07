@@ -35,16 +35,10 @@ export default function Home() {
 
   // 监听 WebSocket 消息
   useEffect(() => {
-    console.log('设置消息订阅, 当前状态:', status);
-
     if (status === 'connected') {
       const unsubscribe = subscribe((data: string) => {
-        console.log('收到WebSocket消息:', data);
-
         try {
           const parsedData = JSON.parse(data);
-          console.log('解析后的数据:', parsedData);
-
           if (parsedData.type === "update") {
             const marketData = parsedData.data[0];
             const formattedMsg = `
@@ -56,17 +50,14 @@ ${parsedData.exchange} - ${marketData.symbol}
 时间: ${new Date(marketData.ts).toLocaleTimeString()}
             `.trim();
 
-            console.log('格式化后的消息:', formattedMsg);
             setMessages(prev => [...prev, formattedMsg]);
           }
         } catch (e) {
-          console.error('解析消息失败:', e);
           setMessages(prev => [...prev, data]);
         }
       });
 
       return () => {
-        console.log('清理消息订阅');
         unsubscribe();
       };
     }
@@ -97,16 +88,6 @@ ${parsedData.exchange} - ${marketData.symbol}
             确认
           </Button>
         </div>
-
-        <Button
-          onClick={() => {
-            const testMsg = `测试消息 ${Date.now()}`;
-            setMessages(prev => [...prev, testMsg]);
-          }}
-          className="mt-2"
-        >
-          添加测试消息
-        </Button>
 
         <Card className="mt-4">
           <CardContent className="p-4">
