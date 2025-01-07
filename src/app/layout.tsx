@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { GeistSans } from "geist/font/sans";
 import "./globals.css";
 import Navigation from "@/components/Navigation";
+import { SocketProvider } from "@/contexts/SocketContext";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -16,8 +17,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${GeistSans.className} min-h-screen flex flex-col`}>
-        <Navigation />
-        {children}
+        <SocketProvider>
+          <Navigation />
+          {children}
+        </SocketProvider>
       </body>
     </html>
   );
