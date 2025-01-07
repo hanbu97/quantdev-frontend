@@ -3,6 +3,7 @@ import { GeistSans } from "geist/font/sans";
 import "./globals.css";
 import Navigation from "@/components/Navigation";
 import { SocketProvider } from "@/contexts/SocketContext";
+import { Toaster } from "@/components/ui/toaster";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -20,6 +21,7 @@ export default function RootLayout({
         <SocketProvider>
           <Navigation />
           {children}
+          <Toaster />
         </SocketProvider>
       </body>
     </html>
