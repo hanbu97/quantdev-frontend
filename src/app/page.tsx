@@ -8,6 +8,8 @@ import { useToast } from "@/hooks/use-toast";
 import { Card, CardContent } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { LatencyChart } from "@/components/LatencyChart";
+import { PriceDiffChart } from "@/components/PriceDiffChart";
+import { BidAskDiffChart } from "@/components/BidAskDiffChart";
 
 export default function Home() {
   const [secretKey, setSecretKey] = useState("");
@@ -16,6 +18,27 @@ export default function Home() {
     timestamp: number;
     latency: number;
     exchange: string;
+  }>>([]);
+  const [lastPrices, setLastPrices] = useState<{
+    okx?: {
+      bid: number;
+      ask: number;
+      last: number;
+    };
+    binance?: {
+      bid: number;
+      ask: number;
+      last: number;
+    };
+  }>({});
+  const [priceDiffData, setPriceDiffData] = useState<Array<{
+    timestamp: number;
+    diff: number;
+  }>>([]);
+  const [bidAskDiffData, setBidAskDiffData] = useState<Array<{
+    timestamp: number;
+    bidDiff: number;
+    askDiff: number;
   }>>([]);
   const { toast } = useToast();
   const { status, subscribe, connect } = useSocketContext();
@@ -53,11 +76,45 @@ export default function Home() {
                 timestamp: Date.now(),
                 latency: latencyInfo.latency,
                 exchange: parsedData.exchange
-              }].slice(-100)); // 保留最近100个数据点
+              }].slice(-100));
             }
 
             // 处理市场数据
             const marketData = parsedData.data[0];
+
+            // 更新最新价格
+            setLastPrices(prev => {
+              const newPrices = {
+                ...prev,
+                [parsedData.exchange]: {
+                  bid: marketData.bid_price,
+                  ask: marketData.ask_price,
+                  last: marketData.last_price
+                }
+              };
+
+              // 如果两个交易所的价格都有了，计算各种价差
+              if (newPrices.okx && newPrices.binance) {
+                // 计算最新价差
+                const lastPriceDiff = newPrices.okx.last - newPrices.binance.last;
+                setPriceDiffData(prev => [...prev, {
+                  timestamp: marketData.ts,
+                  diff: lastPriceDiff
+                }].slice(-100));
+
+                // 计算买卖价差
+                const bidDiff = newPrices.okx.bid - newPrices.binance.bid;
+                const askDiff = newPrices.okx.ask - newPrices.binance.ask;
+                setBidAskDiffData(prev => [...prev, {
+                  timestamp: marketData.ts,
+                  bidDiff,
+                  askDiff
+                }].slice(-100));
+              }
+
+              return newPrices;
+            });
+
             const formattedMsg = `
 ${parsedData.exchange} - ${marketData.symbol}
 价格: ${marketData.last_price}
@@ -106,36 +163,52 @@ ${parsedData.exchange} - ${marketData.symbol}
           </Button>
         </div>
 
-        <Card>
-          <CardContent className="p-4">
-            <h3 className="text-sm font-medium mb-2">延迟监控</h3>
-            <LatencyChart data={latencyData} />
-          </CardContent>
-        </Card>
+        <div className="grid grid-cols-1 gap-4">
+          <Card>
+            <CardContent className="p-4">
+              <h3 className="text-sm font-medium mb-2">延迟监控</h3>
+              <LatencyChart data={latencyData} />
+            </CardContent>
+          </Card>
 
-        <Card className="mt-4">
-          <CardContent className="p-4">
-            <h3 className="text-sm font-medium mb-2">接收到的消息:</h3>
-            <ScrollArea className="h-[500px] w-full rounded-md border p-4">
-              <div className="space-y-2">
-                {messages.length === 0 ? (
-                  <div className="text-center text-muted-foreground">
-                    暂无消息
-                  </div>
-                ) : (
-                  messages.map((msg, index) => (
-                    <div
-                      key={index}
-                      className="text-xs rounded-lg bg-muted p-2 whitespace-pre font-mono border"
-                    >
-                      {msg}
+          <Card>
+            <CardContent className="p-4">
+              <h3 className="text-sm font-medium mb-2">价差监控 (OKX - Binance)</h3>
+              <PriceDiffChart data={priceDiffData} />
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardContent className="p-4">
+              <h3 className="text-sm font-medium mb-2">买卖价差监控 (OKX - Binance)</h3>
+              <BidAskDiffChart data={bidAskDiffData} />
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardContent className="p-4">
+              <h3 className="text-sm font-medium mb-2">接收到的消息:</h3>
+              <ScrollArea className="h-[500px] w-full rounded-md border p-4">
+                <div className="space-y-2">
+                  {messages.length === 0 ? (
+                    <div className="text-center text-muted-foreground">
+                      暂无消息
                     </div>
-                  ))
-                )}
-              </div>
-            </ScrollArea>
-          </CardContent>
-        </Card>
+                  ) : (
+                    messages.map((msg, index) => (
+                      <div
+                        key={index}
+                        className="text-xs rounded-lg bg-muted p-2 whitespace-pre font-mono border"
+                      >
+                        {msg}
+                      </div>
+                    ))
+                  )}
+                </div>
+              </ScrollArea>
+            </CardContent>
+          </Card>
+        </div>
       </div>
     </main>
   );
