@@ -14,6 +14,7 @@ export default function Navigation() {
 
     const navItems = [
         { name: "首页", href: "/" },
+        { name: "交易所", href: "/exchanges" },
         { name: "设置", href: "/settings" },
     ];
 
