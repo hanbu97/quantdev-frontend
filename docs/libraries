@@ -1,0 +1,17 @@
+├── index.md                    # 总览页面
+├── core/
+│   ├── index.md               # Core库总览
+│   ├── configuration.md       # 配置指南
+│   └── api-reference.md       # API文档
+├── data/
+│   ├── index.md               # Data库总览
+│   ├── data-sources.md        # 数据源介绍
+│   └── data-processing.md     # 数据处理指南
+├── ml/
+│   ├── index.md               # ML库总览
+│   ├── models.md              # 模型介绍
+│   └── training.md            # 训练指南
+└── trading/
+    ├── index.md               # Trading库总览
+    ├── strategies.md          # 策略开发
+    └── execution.md           # 执行系统 
