@@ -1,36 +1,128 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Quantdev Frontend
 
-## Getting Started
+Quantdev 是一个现代化的量化交易前端平台，提供实时市场数据监控和交易管理功能。
 
-First, run the development server:
+## 技术栈
+
+### 核心框架
+- Next.js 15.1.3 (使用 App Router)
+- React 19
+- TypeScript 5.x
+
+### UI 组件和样式
+- Tailwind CSS 3.4.1
+- Radix UI 组件库
+  - Dialog
+  - Navigation Menu
+  - Scroll Area
+  - Switch
+  - Tabs
+  - Toast
+  - Alert Dialog
+  - Label
+- Lucide React (图标库)
+- Geist (字体)
+- class-variance-authority (样式变体管理)
+- tailwind-merge (Tailwind 类合并)
+- tailwindcss-animate (动画库)
+
+### 网络和数据
+- Axios 1.7.9 (HTTP 请求)
+- Socket.IO Client 4.8.1 (WebSocket 通信)
+
+### 开发工具
+- TurboRepo (开发服务器)
+- ESLint (代码规范)
+- PostCSS (CSS 处理器)
+
+## 功能特性
+
+- 📊 实时市场数据监控
+- 🔄 交易所配置管理
+- 📈 延迟监控图表
+- ⚙️ 系统设置
+- 📚 文档支持
+
+## 快速开始
+
+### 环境要求
+
+- [Bun](https://bun.sh) 1.0 或更高版本
+
+### 安装
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
+# 克隆项目
+git clone [your-repository-url]
+
+# 进入项目目录
+cd quantdev-frontend
+
+# 安装依赖
+bun install
+
+# 启动开发服务器
 bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+项目将在 `http://localhost:3000` 启动。
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 主要页面
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 首页 (`/`)
+- 多交易所实时延迟监控
+- 交易所间价差分析
 
-## Learn More
+### 交易所 (`/exchanges`)
+- 交易所币对数量显示
+- 交易对搜索（各交易所支持情况）
 
-To learn more about Next.js, take a look at the following resources:
+### 文档 (`/docs`)
+- 简单的文档示例
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### 设置 (`/settings`)
+- 查看/修改价差阈值
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 项目结构
 
-## Deploy on Vercel
+### `src/app`
+Next.js 15 App Router 页面目录：
+- `/page.tsx` - 首页，展示延迟和价差监控
+- `/exchanges/page.tsx` - 交易所管理页面
+- `/docs/page.tsx` - 文档页面
+- `/settings/page.tsx` - 设置页面
+- `layout.tsx` - 全局布局组件
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### `src/apis`
+API 接口和数据处理：
+- `/config` - 配置相关 API（价差阈值等）
+- `/data` - 数据相关 API（交易所数据等）
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### `src/components`
+可复用组件：
+- `/ui` - 基础 UI 组件（按钮、输入框等）
+- `Navigation.tsx` - 导航栏组件
+- `LatencyChart.tsx` - 延迟图表组件
+
+### `src/contexts`
+React Context 状态管理：
+- `SocketContext.tsx` - WebSocket 连接管理
+- `ThemeContext.tsx` - 主题管理
+
+### `src/hooks`
+自定义 React Hooks：
+- `useSocket.ts` - WebSocket 连接 Hook
+- `useToast.ts` - 消息提示 Hook
+
+### `src/lib`
+工具函数和通用逻辑：
+- `utils.ts` - 通用工具函数
+- `api.ts` - API 请求封装
+
+### `src/config`
+配置文件：
+- `api.ts` - API 配置
+- `constants.ts` - 常量定义
+
+
+
