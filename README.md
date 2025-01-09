@@ -69,60 +69,60 @@ bun dev
 
 ## 主要页面
 
-### 首页 (`/`)
+### 首页 ([`/`](src/app/page.tsx))
 - 多交易所实时延迟监控
 - 交易所间价差分析
 
-### 交易所 (`/exchanges`)
+### 交易所 ([`/exchanges`](src/app/exchanges/page.tsx))
 - 交易所币对数量显示
 - 交易对搜索（各交易所支持情况）
 
-### 文档 (`/docs`)
+### 文档 ([`/docs`](src/app/docs/page.tsx))
 - 简单的文档示例
 
-### 设置 (`/settings`)
+### 设置 ([`/settings`](src/app/settings/page.tsx))
 - 查看/修改价差阈值
 
 ## 项目结构
 
-### `src/app`
+### [`src/app`](src/app)
 Next.js 15 App Router 页面目录：
-- `/page.tsx` - 首页，展示延迟和价差监控
-- `/exchanges/page.tsx` - 交易所管理页面
-- `/docs/page.tsx` - 文档页面
-- `/settings/page.tsx` - 设置页面
-- `layout.tsx` - 全局布局组件
+- [`/page.tsx`](src/app/page.tsx) - 首页，展示延迟和价差监控
+- [`/exchanges/page.tsx`](src/app/exchanges/page.tsx) - 交易所管理页面
+- [`/docs/page.tsx`](src/app/docs/page.tsx) - 文档页面
+- [`/settings/page.tsx`](src/app/settings/page.tsx) - 设置页面
+- [`layout.tsx`](src/app/layout.tsx) - 全局布局组件
 
-### `src/apis`
+### [`src/apis`](src/apis)
 API 接口和数据处理：
-- `/config` - 配置相关 API（价差阈值等）
-- `/data` - 数据相关 API（交易所数据等）
+- [`/config`](src/apis/config) - 配置相关 API（价差阈值等）
+- [`/data`](src/apis/data) - 数据相关 API（交易所数据等）
 
-### `src/components`
+### [`src/components`](src/components)
 可复用组件：
-- `/ui` - 基础 UI 组件（按钮、输入框等）
-- `Navigation.tsx` - 导航栏组件
-- `LatencyChart.tsx` - 延迟图表组件
+- [`/ui`](src/components/ui) - 基础 UI 组件（按钮、输入框等）
+- [`Navigation.tsx`](src/components/Navigation.tsx) - 导航栏组件
+- [`LatencyChart.tsx`](src/components/LatencyChart.tsx) - 延迟图表组件
 
-### `src/contexts`
+### [`src/contexts`](src/contexts)
 React Context 状态管理：
-- `SocketContext.tsx` - WebSocket 连接管理
-- `ThemeContext.tsx` - 主题管理
+- [`SocketContext.tsx`](src/contexts/SocketContext.tsx) - WebSocket 连接管理
+- [`ThemeContext.tsx`](src/contexts/ThemeContext.tsx) - 主题管理
 
-### `src/hooks`
+### [`src/hooks`](src/hooks)
 自定义 React Hooks：
-- `useSocket.ts` - WebSocket 连接 Hook
-- `useToast.ts` - 消息提示 Hook
+- [`useSocket.ts`](src/hooks/useSocket.ts) - WebSocket 连接 Hook
+- [`useToast.ts`](src/hooks/use-toast.ts) - 消息提示 Hook
 
-### `src/lib`
+### [`src/lib`](src/lib)
 工具函数和通用逻辑：
-- `utils.ts` - 通用工具函数
-- `api.ts` - API 请求封装
+- [`utils.ts`](src/lib/utils.ts) - 通用工具函数
+- [`api.ts`](src/lib/api.ts) - API 请求封装
 
-### `src/config`
+### [`src/config`](src/config)
 配置文件：
-- `api.ts` - API 配置
-- `constants.ts` - 常量定义
+- [`api.ts`](src/config/api.ts) - API 配置
+- [`constants.ts`](src/config/constants.ts) - 常量定义
 
 
 
